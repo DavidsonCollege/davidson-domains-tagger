@@ -14,6 +14,8 @@ define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-d
 
 update_option('ddm_tags', array("Artsy", "Fartsy"), yes);
 
+
+/* SETTINGS PAGE */
 function ddm_options_page_html()
 {
   // check user capabilities
@@ -25,13 +27,13 @@ function ddm_options_page_html()
   <div class="wrap">
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
     <h2>Tags</h2>
-    <form action="options.php" method="post">
+    <form action=".php" method="post">
       <?php
-      
+
       //TODO Make call to server to dynamically populate this field.
       $ddm_tags_remote = array("Artsy", "Fartsy", "Nerdy", "Turdy");
       $ddm_tags = get_option('ddm_tags');
-      plugin_dir_path('davidson-domains-meta')
+      // plugin_dir_path('davidson-domains-meta')
       for ($x = 0; $x < sizeof($ddm_tags_remote); $x++) {
         ?>
         <label for="<?=$ddm_tags_remote[$x]?>"> <?=$ddm_tags_remote[$x]?> </label>
@@ -75,7 +77,28 @@ function ddm_options_page()
     'ddm_options_page_html'
   );
 }
+
 add_action('admin_menu', 'ddm_options_page');
 
+/* UPDATE REST API*/
+
+add_action( 'rest_api_init', function () {
+  register_rest_route( 'ddmeta', '/tags', array(
+    'methods' => 'GET',
+    'callback' => 'ddm_return_tags',
+  ) );
+} );
+
+function ddm_return_tags(){
+  $string = '"tags":[';
+  $tags = get_option('ddm_tags');
+
+  for ($x = 0; $x < sizeof($tags); $x++) {
+    $string = $string . '"' . $tags[$x] . '", ';
+  }
+
+  $string = $string . ']';
+  return $string;
+};
 
 ?>
