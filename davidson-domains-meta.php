@@ -31,7 +31,14 @@ function ddm_options_page_html()
       <?php
 
       //TODO Make call to server to dynamically populate this field.
-      $ddm_tags_remote = array("Artsy", "Fartsy", "Nerdy", "Turdy");
+      $ddm_tags_remotes = array("Artsy", "Fartsy", "Nerdy", "Turdy");
+      $response = wp_remote_get( DDM_LIST );
+      
+      if ( is_array( $response ) ) {
+        $ddm_tags_remote = explode (',', $response['body']);
+      }
+
+
       $ddm_tags = get_option('ddm_tags');
       // plugin_dir_path('davidson-domains-meta')
       for ($x = 0; $x < sizeof($ddm_tags_remote); $x++) {
@@ -90,15 +97,10 @@ add_action( 'rest_api_init', function () {
 } );
 
 function ddm_return_tags(){
-  $string = '"tags":[';
+
   $tags = get_option('ddm_tags');
+  return json_encode( $tags );
 
-  for ($x = 0; $x < sizeof($tags); $x++) {
-    $string = $string . '"' . $tags[$x] . '", ';
-  }
-
-  $string = $string . ']';
-  return $string;
 };
 
 ?>
