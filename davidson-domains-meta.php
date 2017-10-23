@@ -27,11 +27,9 @@ function ddm_options_page_html()
   <div class="wrap">
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
     <h2>Tags</h2>
-    <form action=".php" method="post">
+    <form action="options.php" method="post">
       <?php
 
-      //TODO Make call to server to dynamically populate this field.
-      $ddm_tags_remotes = array("Artsy", "Fartsy", "Nerdy", "Turdy");
       $response = wp_remote_get( DDM_LIST );
 
       if ( is_array( $response ) ) {
@@ -44,7 +42,6 @@ function ddm_options_page_html()
         ?>
         <label for="<?=$ddm_tags_remote[$x]?>"> <?=$ddm_tags_remote[$x]?> </label>
         <?php
-        ?> <script> console.log("<?= $ddm_tags_remote[$x] ?>", "<?= serialize( $ddm_tags )?>") </script> <?php
         if ( in_array($ddm_tags_remote[$x], $ddm_tags) ){
           ?>
           <input id="<?=$ddm_tags_remote[$x]?>" type="checkbox" checked>
