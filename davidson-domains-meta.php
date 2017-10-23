@@ -15,8 +15,8 @@
  */
 
 /* Different ways to get remote address: direct & behind proxy */
-define('LIMIT_LOGIN_DIRECT_ADDR', 'REMOTE_ADDR');
-define('LIMIT_LOGIN_PROXY_ADDR', 'HTTP_X_FORWARDED_FOR');
+define('DDM_LIST', 'https://raw.githubusercontent.com/john-michael-murphy/john-michael-murphy.github.io/master/options.php');
+define('DDM_', 'HTTP_X_FORWARDED_FOR');
 
 /* Notify value checked against these in limit_login_sanitize_variables() */
 define('LIMIT_LOGIN_LOCKOUT_NOTIFY_ALLOWED', 'log,email');
@@ -34,6 +34,8 @@ function ddm_options_page_html()
         <form action="options.php" method="post">
           <label for='artsy'>Artsy</label>
           <input id="artsy" type="checkbox">
+
+
           <label for='fartsy'>Fartsy</label>
           <input id="fartsy" type="checkbox">
           <label for='nerdy'>Nerdy</label>
@@ -41,6 +43,12 @@ function ddm_options_page_html()
           <label for='turdy'>Turdy</label>
           <input id="turdy" type="checkbox">
 
+            <?php $quotations = get_option('ddm_tags') ?>
+            <?php
+              for ($x = 0; $x <= sizeof($quotations); $x++) {
+                  echo $quotations[$x];
+              }
+            ?>
             <?php
             // output security fields for the registered setting "wporg_options"
             settings_fields('wporg_options');
@@ -66,5 +74,13 @@ function ddm_options_page()
         'ddm_options_page_html'
     );
 }
+$quotes = array(
+            "The weak can never forgive. Forgiveness is the attribute of the strong",
+            "Be strong when you are weak, Be brave when you are scared, Be humble when you are victorious",
+            "Our success is achieved by uniting our strength, not by gathering our weaknesses",
+            "One of the most common causes of failure is the habit of of quitting when one is overtaken by temporary defeat",
+            "The struggles make you stronger and the changes make you wise! Happiness has its own way of taking its sweet time"
+            );
 add_action('admin_menu', 'ddm_options_page');
+update_option('ddm_tags', $quotes, yes);
 ?>
