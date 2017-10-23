@@ -3,7 +3,7 @@
 Plugin Name: Davidson Domains Meta
 Plugin URI: https://github.com/DavidsonCollege/davidson-domains-meta
 Description: Tag Sort
-Author: John-Michael Murphy, Joe Bannerman
+Author: John-Michael Murphy
 Author URI: https://github.com/DavidsonCollege/
 Text Domain: davidson-domains-meta
 Version: 0.1
@@ -18,10 +18,7 @@ update_option('ddm_tags', array("Artsy", "Fartsy"), yes);
 /* SETTINGS PAGE */
 function ddm_options_page_html()
 {
-  // check user capabilities
-  if (!current_user_can('manage_options')) {
-    return;
-  }
+  if (!current_user_can('manage_options')) { return; }
   ?>
 
   <div class="wrap">
@@ -55,12 +52,8 @@ function ddm_options_page_html()
         }
       }
 
-      // output security fields for the registered setting "wporg_options"
       settings_fields('wporg_options');
-      // output setting sections and their fields
-      // (sections are registered for "wporg", each field is registered to a specific section)
       do_settings_sections('wporg');
-      // output save settings button
       submit_button('Save Settings');
 
       ?>
@@ -84,7 +77,7 @@ function ddm_options_page()
 
 add_action('admin_menu', 'ddm_options_page');
 
-/* UPDATE REST API*/
+/* ADD TAGS ROUTE TO API*/
 
 add_action( 'rest_api_init', function () {
   register_rest_route( 'ddmeta', '/tags', array(
