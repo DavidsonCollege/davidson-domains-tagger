@@ -23,6 +23,8 @@ function ddm_options_page_html()
     <h2>Tags</h2>
     <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post">
       <?php
+      // Add nonce to form.
+      wp_nonce_field('edit_tags', 'ddm_tag_nonce');
 
       $response = wp_remote_get( DDM_LIST );
 
