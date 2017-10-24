@@ -12,9 +12,6 @@ Version: 0.1
 
 define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/master/tags');
 
-update_option('ddm_tags', array("Artsy", "Fartsy"), yes);
-
-
 /* SETTINGS PAGE */
 function ddm_options_page_html()
 {
@@ -24,7 +21,7 @@ function ddm_options_page_html()
   <div class="wrap">
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
     <h2>Tags</h2>
-    <form action="options.php" method="post">
+    <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post">
       <?php
 
       $response = wp_remote_get( DDM_LIST );
@@ -41,13 +38,13 @@ function ddm_options_page_html()
         <?php
         if ( in_array($ddm_tags_remote[$x], $ddm_tags) ){
           ?>
-          <input id="<?=$ddm_tags_remote[$x]?>" type="checkbox" checked>
+          <input id="<?=$ddm_tags_remote[$x]?>" name='tags[]' value ='<?=$ddm_tags_remote[$x]?>' type="checkbox" checked>
           <?php
         }
 
         else {
           ?>
-          <input id="<?=$ddm_tags_remote[$x]?>" type="checkbox">
+          <input id="<?=$ddm_tags_remote[$x]?>" name='tags[]' value ='<?=$ddm_tags_remote[$x]?>' type="checkbox">
           <?php
         }
       }
