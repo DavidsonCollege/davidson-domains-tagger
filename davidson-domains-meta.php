@@ -78,18 +78,34 @@ add_action('admin_menu', 'ddm_options_page');
 
 /* ADD TAGS ROUTE TO API*/
 
-add_action( 'rest_api_init', function () {
-  register_rest_route( 'ddmeta', '/tags', array(
-    'methods' => 'GET',
-    'callback' => 'ddm_return_tags',
-  ) );
-} );
+// // NOTE Commented out code below is for creating new JSON route
+//
+// add_action( 'rest_api_init', function () {
+//   register_rest_route( 'rest_index', '/', array(
+//     'methods' => 'GET',
+//     'callback' => 'ddm_return_tags',
+//   ) );
+// } );
+//
+// function ddm_return_tags(){
+//
+//   $tags = get_option('ddm_tags');
+//   return json_encode( $tags );
+//
+// };
 
-function ddm_return_tags(){
 
-  $tags = get_option('ddm_tags');
-  return json_encode( $tags );
+add_filter('rest_index', 'filterResponse');
 
-};
+function filterResponse($response){
+   $data = $response->data;
+//   $data = json_decode( $data );
+    // $data->['ddm_tags'] = get_option('ddm_tags');
+    array_push($data, array('ddmtags' => get_option('ddm_tags')));
+//   $response→set_data($data);
+  //  return $response;
+    return json_encode( $data );
+}
+
 
 ?>
