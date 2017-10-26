@@ -2,15 +2,20 @@
 /*
 Plugin Name: Davidson Domains Meta
 Plugin URI: https://github.com/DavidsonCollege/davidson-domains-meta
-Description: Tag Sort
+Description: Opt into Davidson Domains
 Author: John-Michael Murphy
 Author URI: https://github.com/DavidsonCollege/
 Text Domain: davidson-domains-meta
-Version: 0.1
+Version: 1.0
 
 */
 
 define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/master/tags');
+//create settings page
+add_action('admin_menu', 'ddm_options_page');
+
+//Append ddm_tags to /wp-json
+add_filter('rest_index', 'filterResponse');
 
 /* SETTINGS PAGE */
 function ddm_options_page_html()
@@ -21,6 +26,11 @@ function ddm_options_page_html()
   <div class="wrap">
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
     <h2>Tags</h2>
+    <?php
+    if (get_bloginfo('version') < 4.8){
+      ?><p style='color: red'>You are running Wordpress version <?= get_bloginfo('version') ?>. This plugin works only with Wordpress 4.8 or above. </p><?php
+    }
+    ?>
     <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post">
       <?php
       // Add nonce to form.
@@ -62,6 +72,7 @@ function ddm_options_page_html()
   <?php
 }
 
+//register settings page
 function ddm_options_page()
 {
   add_submenu_page(
@@ -74,22 +85,13 @@ function ddm_options_page()
   );
 }
 
-add_action('admin_menu', 'ddm_options_page');
 
-/* ADD TAGS ROUTE TO API*/
+function filterResponse($response){
+  $data = $response->data;
+  $data['ddm_tag'] = get_option('ddm_tags');
+  $response->set_data($data);
+  return $response;
+}
 
-add_action( 'rest_api_init', function () {
-  register_rest_route( 'ddmeta', '/tags', array(
-    'methods' => 'GET',
-    'callback' => 'ddm_return_tags',
-  ) );
-} );
-
-function ddm_return_tags(){
-
-  $tags = get_option('ddm_tags');
-  return json_encode( $tags );
-
-};
 
 ?>
