@@ -60,8 +60,8 @@ function ddm_options_page_html()
   
   //Convert JSON object to PHP object
   // Should look something like this. That may be right, but I'm not sure.
-  $response = var_dump(json_decode($response));
-  $response = var_dump(json_decode($response, true));
+  //$response = var_dump(json_decode($response));
+  $response = json_decode($response);
   // See http://php.net/manual/en/function.json-decode.php
   
   //Iterate through object. Each key becomes a section. Iterate through the associated array. 
