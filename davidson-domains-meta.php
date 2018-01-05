@@ -26,14 +26,6 @@ function ddm_options_page_html()
   <div class="wrap">
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
     
-    
-    <h2>Who are you?</h2>
-    <br>
-    
-    <h2>What type of site is this?</h2>
-    <br>
-    <h2>If you are a student what is your expected year of graduation?</h2>
-    
     <?php
     if (get_bloginfo('version') < 4.8){
       ?><p style='color: red'>You are running Wordpress version <?= get_bloginfo('version') ?>. This plugin works only with Wordpress 4.8 or above. </p><?php
