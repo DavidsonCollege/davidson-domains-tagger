@@ -43,13 +43,20 @@ function ddm_options_page_html()
   
   <?php
   // Add nonce to form.
-  wp_nonce_field('edit_tags', 'ddm_tag_nonce');
+  //wp_nonce_field('edit_tags', 'ddm_tag_nonce');
   
   //Retrieve currently selected settings from WP database
   $ddm_tags = get_option('ddm_tags');
   
   //Retrieve JSON from CDN (GitHub in our case)
-  $response = wp_remote_get( DDM_LIST );
+  //$response = wp_remote_get( DDM_LIST );
+  
+  //json array
+  $response =  '{
+                "Who are you": ["Faculty","Staff","Student"],
+                "What type of site is this?": ["English","CIS","Digital Storytelling","Portfolio","Experiment","Course Site","Oral Histories","Archives","Podcast","JEC Mellon Funded","Research/Scholarship","Organization"],
+                "If you are a student what is your expected year of graduation?": ["2016","2017","2018","2019"]
+                }';
   
   //Convert JSON object to PHP object
   // Should look something like this. That may be right, but I'm not sure.
