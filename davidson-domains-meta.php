@@ -40,42 +40,61 @@ function ddm_options_page_html()
     }
     ?>
     <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post">
-      <?php
-      // Add nonce to form.
-      wp_nonce_field('edit_tags', 'ddm_tag_nonce');
-
-      $response = wp_remote_get( DDM_LIST );
-
-      if ( is_array( $response ) ) {
-        $ddm_tags_remote = explode (',', $response['body']);
-      }
-
-      $ddm_tags = get_option('ddm_tags');
-      // plugin_dir_path('davidson-domains-meta')
-      for ($x = 0; $x < sizeof($ddm_tags_remote); $x++) {
+  
+  <?php
+  // Add nonce to form.
+  wp_nonce_field('edit_tags', 'ddm_tag_nonce');
+  
+  //Retrieve currently selected settings from WP database
+  $ddm_tags = get_option('ddm_tags');
+  
+  //Retrieve JSON from CDN (GitHub in our case)
+  $response = wp_remote_get( DDM_LIST );
+  
+  //Convert JSON object to PHP object
+  // Should look something like this. That may be right, but I'm not sure.
+  $response = var_dump(json_decode($response));
+  // See http://php.net/manual/en/function.json-decode.php
+  
+  //Iterate through object. Each key becomes a section. Iterate through the associated array. 
+  foreach ($response as $key => $attributes) {
+    
+    //Section Title
+    ?><h3><?=$key?></h3><?php
+    
+    //Section attributes
+    for ($x = 0; $x < sizeof($attributes); $x++) {
+      
+      //Checkbox label
+      ?><label for="<?=$attributes[$x]?>"> <?=$attributes[$x]?></label><?php
+      
+      //Check the box if user has previously checked
+      if ( in_array($attributes[$x], $ddm_tags) ){
         ?>
-        <label for="<?=$ddm_tags_remote[$x]?>"> <?=$ddm_tags_remote[$x]?> </label>
+        <input id="<?=$attributes[$x]?>" name='tags[]' value ='<?=$attributes[$x]?>' type="checkbox" checked>
         <?php
-        if ( in_array($ddm_tags_remote[$x], $ddm_tags) ){
-          ?>
-          <input id="<?=$ddm_tags_remote[$x]?>" name='tags[]' value ='<?=$ddm_tags_remote[$x]?>' type="checkbox" checked>
-          <?php
-        }
-
-        else {
-          ?>
-          <input id="<?=$ddm_tags_remote[$x]?>" name='tags[]' value ='<?=$ddm_tags_remote[$x]?>' type="checkbox">
-          <?php
-        }
       }
-
-      settings_fields('wporg_options');
-      do_settings_sections('wporg');
-      submit_button('Save Settings');
-
-      ?>
-
-    </form>
+      
+      //Don't check the box if user hasn't previously checked
+      else {
+        ?>
+        <input id="<?=$attributes[$x]?>" name='tags[]' value ='<?=$attributes[$x]?>' type="checkbox">
+        <?php
+      }
+      
+    }
+    
+  }
+  
+  
+  
+  //Save on subject
+  settings_fields('wporg_options');
+  do_settings_sections('wporg');
+  submit_button('Save Settings');
+  ?>
+  
+</form>
   </div>
   <?php
 }
