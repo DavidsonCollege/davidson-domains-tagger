@@ -35,7 +35,7 @@ function ddm_options_page_html()
   
   <?php
   // Add nonce to form.
-  //wp_nonce_field('edit_tags', 'ddm_tag_nonce');
+  wp_nonce_field('edit_tags', 'ddm_tag_nonce');
   
   //Retrieve currently selected settings from WP database
   $ddm_tags = get_option('ddm_tags');
@@ -51,8 +51,6 @@ function ddm_options_page_html()
                 }';
   
   //Convert JSON object to PHP object
-  // Should look something like this. That may be right, but I'm not sure.
-  //$response = var_dump(json_decode($response));
   $response = json_decode($response);
   // See http://php.net/manual/en/function.json-decode.php
   
