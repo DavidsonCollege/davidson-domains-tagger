@@ -45,7 +45,7 @@ function ddm_options_page_html()
   
   //json array
   $response =  '{
-                "Who are you": ["Faculty","Staff","Student"],
+                "Who are you?": ["Faculty","Staff","Student"],
                 "What type of site is this?": ["English","CIS","Digital Storytelling","Portfolio","Experiment","Course Site","Oral Histories","Archives","Podcast","JEC Mellon Funded","Research/Scholarship","Organization"],
                 "If you are a student what is your expected year of graduation?": ["2016","2017","2018","2019"]
                 }';
