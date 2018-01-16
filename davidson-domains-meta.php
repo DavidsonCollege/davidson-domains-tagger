@@ -3,7 +3,7 @@
 Plugin Name: Davidson Domains Meta
 Plugin URI: https://github.com/DavidsonCollege/davidson-domains-meta
 Description: Opt into Davidson Domains
-Author: John-Michael Murphy
+Author: John-Michael Murphy and Joe Bannerman
 Author URI: https://github.com/DavidsonCollege/
 Text Domain: davidson-domains-meta
 Version: 1.0
