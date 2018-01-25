@@ -31,7 +31,10 @@ function ddm_options_page_html()
       ?><p style='color: red'>You are running Wordpress version <?= get_bloginfo('version') ?>. This plugin works only with Wordpress 4.8 or above. </p><?php
     }
     ?>
-    <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post">
+     <script>
+        function saveSettings(){alert('Settings Saved')}
+    </script>
+    <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post" onsubmit="return saveSettings()">
   
   <?php
   // Add nonce to form.
@@ -89,7 +92,7 @@ function ddm_options_page_html()
   //Save on subject
   settings_fields('wporg_options');
   do_settings_sections('wporg');
-  submit_button('Save Settings',NULL,NULL,NULL,array('onsubmit'=>"alert('Settings Saved')"));
+  submit_button('Save Settings');
   ?>
   
 </form>
