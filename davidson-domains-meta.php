@@ -89,7 +89,7 @@ function ddm_options_page_html()
   //Save on subject
   settings_fields('wporg_options');
   do_settings_sections('wporg');
-  submit_button('Save Settings');
+  submit_button('Save Settings',NULL,NULL,NULL,array('onsubmit'=>"alert('Settings Saved')"));
   ?>
   
 </form>
