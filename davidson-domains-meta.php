@@ -32,7 +32,7 @@ function ddm_options_page_html()
     }
     ?>
      <script>
-        function saveSettings(){alert('Settings Saved')}
+        function saveSettings(){alert('Your Settings have been Saved!')}
     </script>
     <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post" onsubmit="return saveSettings()">
   
