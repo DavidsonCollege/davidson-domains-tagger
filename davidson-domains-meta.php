@@ -45,10 +45,10 @@ function ddm_options_page_html()
   $ddm_tags = get_option('ddm_tags');
 
   //Retrieve JSON from CDN (GitHub in our case)
-  $response = wp_remote_get( DDM_LIST );
+  $response = wp_remote_retrieve_body( DDM_LIST );
 
   //Convert JSON object to PHP object
-  $response = json_decode($response, true);
+  $response = json_decode($response);
   // See http://php.net/manual/en/function.json-decode.php
 
   //Iterate through object. Each key becomes a section. Iterate through the associated array.
