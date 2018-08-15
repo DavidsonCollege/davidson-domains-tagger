@@ -21,6 +21,7 @@ add_filter('rest_index', 'filterResponse');
 function ddm_options_page_html()
 {
   if (!current_user_can('manage_options')) { return; }
+
   ?>
 
   <div class="wrap">
@@ -47,7 +48,7 @@ function ddm_options_page_html()
   $response = wp_remote_get( DDM_LIST );
 
   //Convert JSON object to PHP object
-  $response = json_decode($response);
+  $response = json_decode($response, true);
   // See http://php.net/manual/en/function.json-decode.php
 
   //Iterate through object. Each key becomes a section. Iterate through the associated array.
