@@ -6,7 +6,7 @@ Description: Opt into Davidson Domains
 Author: John-Michael Murphy and Joe Bannerman
 Author URI: https://github.com/DavidsonCollege/
 Text Domain: davidson-domains-meta
-Version: 1.0
+Version: 1.2
 
 */
 
@@ -40,6 +40,10 @@ function ddm_options_page_html()
 
   //Retrieve currently selected settings from WP database
   $ddm_tags = get_option('ddm_tags');
+  if ( empty($ddm_tags) ) {
+    // If the array doesn't exist, then create an empty one, so in_array doesn't bawk.
+    $ddm_tags = [];
+  }
 
   //Retrieve JSON from CDN (GitHub in our case)
   $response = wp_remote_get( DDM_LIST );
