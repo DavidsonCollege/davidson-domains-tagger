@@ -10,7 +10,7 @@ Version: 1.0
 
 */
 
-define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/upgrade/tags');
+define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/upgrade/tags.json');
 //create settings page
 add_action('admin_menu', 'ddm_options_page');
 
@@ -21,12 +21,9 @@ add_filter('rest_index', 'filterResponse');
 function ddm_options_page_html()
 {
   if (!current_user_can('manage_options')) { return; }
-
   ?>
-
   <div class="wrap">
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
-
     <?php
     if (get_bloginfo('version') < 4.8){
       ?><p style='color: red'>You are running Wordpress version <?= get_bloginfo('version') ?>. This plugin works only with Wordpress 4.8 or above. </p><?php
@@ -45,7 +42,8 @@ function ddm_options_page_html()
   $ddm_tags = get_option('ddm_tags');
 
   //Retrieve JSON from CDN (GitHub in our case)
-  $response = wp_remote_retrieve_body( DDM_LIST );
+  $response = wp_remote_get( DDM_LIST );
+  $response = $response['body'];
 
   //Convert JSON object to PHP object
   $response = json_decode($response);
