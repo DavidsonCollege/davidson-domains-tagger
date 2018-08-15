@@ -10,7 +10,7 @@ Version: 1.0
 
 */
 
-define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/documentation-and-upgrades/tags.json');
+define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/documentation-and-upgrades/tags');
 //create settings page
 add_action('admin_menu', 'ddm_options_page');
 
