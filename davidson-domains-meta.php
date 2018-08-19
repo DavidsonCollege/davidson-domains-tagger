@@ -10,7 +10,7 @@ Version: 1.2
 
 */
 
-define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/upgrade/tags.json');
+define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/master/tags.json');
 //create settings page
 add_action('admin_menu', 'ddm_options_page');
 
@@ -62,9 +62,6 @@ function ddm_options_page_html()
     //Section attributes
     for ($x = 0; $x < sizeof($attributes); $x++) {
 
-      //Checkbox label
-      ?><label for="<?=$attributes[$x]?>"> <?=$attributes[$x]?></label><?php
-
       //Check the box if user has previously checked
       if ( in_array($attributes[$x], $ddm_tags) ){
         ?>
@@ -78,6 +75,9 @@ function ddm_options_page_html()
         <input id="<?=$attributes[$x]?>" name='tags[]' value ='<?=$attributes[$x]?>' type="checkbox">
         <?php
       }
+
+      //Checkbox label
+      ?><label for="<?=$attributes[$x]?>"> <?=$attributes[$x]?></label><?php
 
     }
 
