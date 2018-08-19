@@ -117,5 +117,6 @@ function filterResponse($response){
   return $response;
 }
 
+add_filter('rest_index', 'filterResponse')
 
 ?>
