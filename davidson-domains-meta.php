@@ -118,4 +118,13 @@ function filterResponse($response){
 }
 
 
+function filterResponse($response){
+   $data = $response->data;
+   $data['categories'] = get_option('ddm_tags');
+   $response->set_data($data);
+   return $response;
+}
+
+add_filter('rest_index', 'filterResponse');
+
 ?>
