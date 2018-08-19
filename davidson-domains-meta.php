@@ -2,15 +2,20 @@
 /*
 Plugin Name: Davidson Domains Meta
 Plugin URI: https://github.com/DavidsonCollege/davidson-domains-meta
-Description: Tag Sort
-Author: John-Michael Murphy
+Description: Opt into Davidson Domains
+Author: John-Michael Murphy and Joe Bannerman
 Author URI: https://github.com/DavidsonCollege/
 Text Domain: davidson-domains-meta
-Version: 0.1
+Version: 1.0
 
 */
 
 define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/master/tags');
+//create settings page
+add_action('admin_menu', 'ddm_options_page');
+
+//Append ddm_tags to /wp-json
+add_filter('rest_index', 'filterResponse');
 
 /* SETTINGS PAGE */
 function ddm_options_page_html()
@@ -20,48 +25,82 @@ function ddm_options_page_html()
 
   <div class="wrap">
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
-    <h2>Tags</h2>
-    <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post">
-      <?php
-      // Add nonce to form.
-      wp_nonce_field('edit_tags', 'ddm_tag_nonce');
-
-      $response = wp_remote_get( DDM_LIST );
-
-      if ( is_array( $response ) ) {
-        $ddm_tags_remote = explode (',', $response['body']);
-      }
-
-      $ddm_tags = get_option('ddm_tags');
-      // plugin_dir_path('davidson-domains-meta')
-      for ($x = 0; $x < sizeof($ddm_tags_remote); $x++) {
+    
+    <?php
+    if (get_bloginfo('version') < 4.8){
+      ?><p style='color: red'>You are running Wordpress version <?= get_bloginfo('version') ?>. This plugin works only with Wordpress 4.8 or above. </p><?php
+    }
+    ?>
+     <script>
+        function saveSettings(){alert('Your Settings have been Saved!')}
+    </script>
+    <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post" onsubmit="return saveSettings()">
+  
+  <?php
+  // Add nonce to form.
+  wp_nonce_field('edit_tags', 'ddm_tag_nonce');
+  
+  //Retrieve currently selected settings from WP database
+  $ddm_tags = get_option('ddm_tags');
+  
+  //Retrieve JSON from CDN (GitHub in our case)
+  //$response = wp_remote_get( DDM_LIST );
+  
+  //json array
+  $response =  '{
+                "Who are you?": ["Faculty","Staff","Student"],
+                "What type of site is this? (You can choose more than one.)": ["English","CIS","Digital Studies","Digital Storytelling","Portfolio","Experiment","Course Site","Oral Histories","Archives","Podcast","JEC Mellon Funded","Research/Scholarship","Organization"],
+                "If you are a student what is your expected year of graduation?": ["2018","2019","2020","2021"]
+                }';
+  
+  //Convert JSON object to PHP object
+  $response = json_decode($response);
+  // See http://php.net/manual/en/function.json-decode.php
+  
+  //Iterate through object. Each key becomes a section. Iterate through the associated array. 
+  foreach ($response as $key => $attributes) {
+    
+    //Section Title
+    ?><h3><?=$key?></h3><?php
+    
+    //Section attributes
+    for ($x = 0; $x < sizeof($attributes); $x++) {
+      
+      //Checkbox label
+      ?><label for="<?=$attributes[$x]?>"> <?=$attributes[$x]?></label><?php
+      
+      //Check the box if user has previously checked
+      if ( in_array($attributes[$x], $ddm_tags) ){
         ?>
-        <label for="<?=$ddm_tags_remote[$x]?>"> <?=$ddm_tags_remote[$x]?> </label>
+        <input id="<?=$attributes[$x]?>" name='tags[]' value ='<?=$attributes[$x]?>' type="checkbox" checked>
         <?php
-        if ( in_array($ddm_tags_remote[$x], $ddm_tags) ){
-          ?>
-          <input id="<?=$ddm_tags_remote[$x]?>" name='tags[]' value ='<?=$ddm_tags_remote[$x]?>' type="checkbox" checked>
-          <?php
-        }
-
-        else {
-          ?>
-          <input id="<?=$ddm_tags_remote[$x]?>" name='tags[]' value ='<?=$ddm_tags_remote[$x]?>' type="checkbox">
-          <?php
-        }
       }
-
-      settings_fields('wporg_options');
-      do_settings_sections('wporg');
-      submit_button('Save Settings');
-
-      ?>
-
-    </form>
+      
+      //Don't check the box if user hasn't previously checked
+      else {
+        ?>
+        <input id="<?=$attributes[$x]?>" name='tags[]' value ='<?=$attributes[$x]?>' type="checkbox">
+        <?php
+      }
+      
+    }
+    
+  }
+  
+  
+  
+  //Save on subject
+  settings_fields('wporg_options');
+  do_settings_sections('wporg');
+  submit_button('Save Settings');
+  ?>
+  
+</form>
   </div>
   <?php
 }
 
+//register settings page
 function ddm_options_page()
 {
   add_submenu_page(
@@ -74,23 +113,14 @@ function ddm_options_page()
   );
 }
 
-add_action('admin_menu', 'ddm_options_page');
 
-/* ADD TAGS ROUTE TO API*/
+function filterResponse($response){
+  $data = $response->data;
+  $data['ddm_tag'] = get_option('ddm_tags');
+  $response->set_data($data);
+  return $response;
+}
 
-add_action( 'rest_api_init', function () {
-  register_rest_route( 'ddmeta', '/tags', array(
-    'methods' => 'GET',
-    'callback' => 'ddm_return_tags',
-  ) );
-} );
-
-function ddm_return_tags(){
-
-  $tags = get_option('ddm_tags');
-  return json_encode( $tags );
-
-};
 
 function filterResponse($response){
    $data = $response->data;
