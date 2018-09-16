@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Davidson Domains Tagger
-Plugin URI: https://github.com/DavidsonCollege/davidson-domains-meta
+Plugin URI: https://github.com/DavidsonCollege/davidson-domains-tagger
 Description: Opt into Davidson Domains
 Author: John-Michael Murphy
 Author URI: https://github.com/DavidsonCollege/
-Text Domain: davidson-domains-meta
-Version: 1.2
+Text Domain: davidson-domains-tagger
+Version: 1.3.0
 
 */
 
