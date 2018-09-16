@@ -10,10 +10,10 @@ Version: 1.2
 
 */
 //create settings page
-add_action('admin_menu', 'ddm_options_page');
+add_action('admin_menu', 'davidson_domains_options_page');
 
 //Append ddm_tags to /wp-json
-add_filter('rest_index', 'filterResponse');
+add_filter('rest_index', 'davidson_domains_add_meta_to_endpoint');
 
 /* SETTINGS PAGE */
 function ddm_options_page_html()
@@ -28,9 +28,9 @@ function ddm_options_page_html()
     }
     ?>
      <script>
-        function saveSettings(){alert('Your Settings have been Saved!')}
+        function onSubmit(){ alert('Your Settings have been Saved!'); }
     </script>
-    <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post" onsubmit="return saveSettings()">
+    <form action="<?= plugins_url('updatesettings.php', __FILE__ ); ?>" method="post" onsubmit="return onSubmit()">
 
   <?php
   // Add nonce to form.
@@ -78,8 +78,6 @@ function ddm_options_page_html()
 
   }
 
-
-
   //Save on subject
   settings_fields('wporg_options');
   do_settings_sections('wporg');
@@ -92,7 +90,7 @@ function ddm_options_page_html()
 }
 
 //register settings page
-function ddm_options_page()
+function davidson_domains_options_page()
 {
   add_submenu_page(
     'tools.php',
@@ -105,13 +103,11 @@ function ddm_options_page()
 }
 
 
-function filterResponse($response){
+function davidson_domains_add_meta_to_endpoint($response){
   $data = $response->data;
   $data['ddm_tag'] = get_option('ddm_tags');
   $response->set_data($data);
   return $response;
 }
-
-add_filter('rest_index', 'filterResponse')
 
 ?>
