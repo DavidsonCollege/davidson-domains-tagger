@@ -3,14 +3,12 @@
 Plugin Name: Davidson Domains Meta
 Plugin URI: https://github.com/DavidsonCollege/davidson-domains-meta
 Description: Opt into Davidson Domains
-Author: John-Michael Murphy and Joe Bannerman
+Author: John-Michael Murphy
 Author URI: https://github.com/DavidsonCollege/
 Text Domain: davidson-domains-meta
 Version: 1.2
 
 */
-
-define('DDM_LIST', 'https://raw.githubusercontent.com/DavidsonCollege/davidson-domains-meta/master/tags.json');
 //create settings page
 add_action('admin_menu', 'ddm_options_page');
 
@@ -26,7 +24,7 @@ function ddm_options_page_html()
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
     <?php
     if (get_bloginfo('version') < 4.8){
-      ?><p style='color: red'>You are running Wordpress version <?= get_bloginfo('version') ?>. This plugin works only with Wordpress 4.8 or above. </p><?php
+      ?><p style='color: red;'>You are running Wordpress version <?= get_bloginfo('version') ?>. This plugin works only with Wordpress 4.8 or above. </p><?php
     }
     ?>
      <script>
@@ -45,16 +43,13 @@ function ddm_options_page_html()
     $ddm_tags = [];
   }
 
-  //Retrieve JSON from CDN (GitHub in our case)
-  $response = wp_remote_get( DDM_LIST );
-  $response = $response['body'];
+  $string = file_get_contents(dirname(__FILE__) . '/tags.json');
+  $tags = json_decode($string, true);
 
-  //Convert JSON object to PHP object
-  $response = json_decode($response);
   // See http://php.net/manual/en/function.json-decode.php
 
   //Iterate through object. Each key becomes a section. Iterate through the associated array.
-  foreach ($response as $key => $attributes) {
+  foreach ($tags as $key => $attributes) {
 
     //Section Title
     ?><h3><?=$key?></h3><?php
