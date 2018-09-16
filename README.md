@@ -18,7 +18,7 @@ This is a Wordpress plugin that exposes metadata about sites to [Site Maker](htt
 - Once selected, the plugin exposes these tags to api via the `/wp-json/` route. (Example: myblog.com/wp-json/)
 - User waits a day or two for Site Maker to add or update their site on the Domains Community Portal.
 
-##### To update the tags displayed in the plugin:
+##### ~~To update the tags displayed in the plugin:~~ OUTDATED
 
 - Admin logs into GitHub and navigates to [/davidson-domains-meta/blob/master/tags.json](https://github.com/DavidsonCollege/davidson-domains-meta/blob/master/tags.json)
 - Admin clicks on the pencil `edit this file`
