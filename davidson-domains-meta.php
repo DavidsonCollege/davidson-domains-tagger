@@ -9,16 +9,15 @@ Text Domain: davidson-domains-meta
 Version: 1.2
 
 */
-//create settings page
-add_action('admin_menu', 'davidson_domains_options_page');
-
-//Append ddm_tags to /wp-json
-add_filter('rest_index', 'davidson_domains_add_meta_to_endpoint');
 
 /* SETTINGS PAGE */
 function ddm_options_page_html()
 {
-  if (!current_user_can('manage_options')) { return; }
+  if (!current_user_can('manage_options')) {
+    status_header(403);
+    ?><h1>Forbidden</h1><?php
+    return;
+  }
   ?>
   <div class="wrap">
     <h1><?= esc_html(get_admin_page_title()); ?></h1>
@@ -45,8 +44,6 @@ function ddm_options_page_html()
 
   $string = file_get_contents(dirname(__FILE__) . '/tags.json');
   $tags = json_decode($string, true);
-
-  // See http://php.net/manual/en/function.json-decode.php
 
   //Iterate through object. Each key becomes a section. Iterate through the associated array.
   foreach ($tags as $key => $attributes) {
@@ -89,7 +86,8 @@ function ddm_options_page_html()
   <?php
 }
 
-//register settings page
+// register settings page
+add_action('admin_menu', 'davidson_domains_options_page');
 function davidson_domains_options_page()
 {
   add_submenu_page(
@@ -102,12 +100,22 @@ function davidson_domains_options_page()
   );
 }
 
-
+//Append ddm_tags to /wp-json
+add_filter('rest_index', 'davidson_domains_add_meta_to_endpoint');
 function davidson_domains_add_meta_to_endpoint($response){
   $data = $response->data;
   $data['ddm_tag'] = get_option('ddm_tags');
   $response->set_data($data);
   return $response;
 }
+
+// if (!wp_verify_nonce($_POST['ddm_tag_nonce'], 'edit_tags')) {
+//     status_header(400, "Invalid nonce");
+//     return;
+// }
+//
+// $tags = $_POST['tags'];
+// update_option('ddm_tags', $tags, yes);
+// echo header('Location: ' . $_SERVER['HTTP_REFERER']);
 
 ?>
