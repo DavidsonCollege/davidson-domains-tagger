@@ -18,18 +18,18 @@ This is a Wordpress plugin that exposes metadata about sites to [Site Maker](htt
 - Once selected, the plugin exposes these tags to api via the `/wp-json/` route. (Example: myblog.com/wp-json/)
 - User waits a day or two for Site Maker to add or update their site on the Domains Community Portal.
 
-##### ~~To update the tags displayed in the plugin:~~ OUTDATED
+Code Owners: John-Michael Murphy (plugin), JD Mills (AWS).
 
-- Admin logs into GitHub and navigates to [/davidson-domains-meta/blob/master/tags.json](https://github.com/DavidsonCollege/davidson-domains-meta/blob/master/tags.json)
-- Admin clicks on the pencil `edit this file`
-- Admin makes changes to the JSON object, abiding by [JSON syntax](https://www.w3schools.com/js/js_json_syntax.asp) of the name/value pairs. The `name` of a name/value pair corresponds with a category. And the `value` (in this case, an array of strings) is a list of tags that relate to the category. For instance: `"What is your class year?": ["2011","2012","2013"]`.
-- After admin makes changes, they run the changes through [JSONLint](https://jsonlint.com/) to ensure they have not made a fatal typo.
-- Once changes are confirmed, admin clicks `Commit Changes`.
-- The new (or removed) tag will appear across all instances of the plugin within about 5 minutes.
+##### To update the tags displayed in the plugin:
+
+- Admin logs into Davidson's AWS instance and updates the database.
+- The new (or removed) tag will appear across all instances of the plugin immediately.
 
 #### Plugin 2: Site Maker
 
 This is the plugin that runs on the Community Portal. It searches Davidson Domains for sites with `Davidson Domains Tagger` plugin installed. If it finds a site with the plugin installed, it adds it to the Community Portal and tags the site according to the plugin's specification. It searches for new sites and updates old sites every 24 hours, however, an admin can trigger an update by navigating to `https://domains.davidson.edu/community/load`.
+
+Code Owner: Tom Woodward.
 
 ##### To Enable:
 
