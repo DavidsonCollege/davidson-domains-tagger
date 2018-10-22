@@ -18,7 +18,7 @@ This is a Wordpress plugin that exposes metadata about sites to [Site Maker](htt
 - Once selected, the plugin exposes these tags to api via the `/wp-json/` route. (Example: myblog.com/wp-json/)
 - User waits a day or two for Site Maker to add or update their site on the Domains Community Portal.
 
-Code Owners: John-Michael Murphy (plugin), JD Mills (AWS).
+`Code Owners: John-Michael Murphy (plugin), JD Mills (AWS).`
 
 ##### To update the tags displayed in the plugin:
 
@@ -29,7 +29,7 @@ Code Owners: John-Michael Murphy (plugin), JD Mills (AWS).
 
 This is the plugin that runs on the Community Portal. It searches Davidson Domains for sites with `Davidson Domains Tagger` plugin installed. If it finds a site with the plugin installed, it adds it to the Community Portal and tags the site according to the plugin's specification. It searches for new sites and updates old sites every 24 hours, however, an admin can trigger an update by navigating to `https://domains.davidson.edu/community/load`.
 
-Code Owner: Tom Woodward.
+`Code Owner: Tom Woodward.`
 
 ##### To Enable:
 
