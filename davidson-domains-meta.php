@@ -7,7 +7,6 @@ Author: John-Michael Murphy
 Author URI: https://github.com/DavidsonCollege/
 Text Domain: davidson-domains-tagger
 Version: 1.3.0
-
 */
 
 
