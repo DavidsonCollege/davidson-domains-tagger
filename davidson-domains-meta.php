@@ -44,13 +44,20 @@ function davidson_domains_do(){
       return;
     }
 
-    $string = file_get_contents(dirname(__FILE__) . '/tags.json');
-    $all_tags = json_decode($string, true);
-    //Retrieve currently selected settings from WP database
-    $selected_tags = get_option('davidson-domains-tags');
-    // If the array doesn't exist, then create an empty one, so in_array doesn't bawk.
-    if ( empty($selected_tags) ) { $selected_tags = []; }
-    else { $selected_tags = davidson_domains_sanitize($selected_tags); }
+    $tags_url = 'https://j70kq14r5g.execute-api.us-east-1.amazonaws.com/default/domainsPortalSurvey';
+    $response = wp_remote_get($tags_url, array( 'timeout' => 120 ));
+
+    $all_tags = [];
+    $selected_tags = [];
+    $has_response_error = is_wp_error( $response ) || $response['response']['code'] != 200;
+
+    if(!$has_response_error) {
+      $body = json_decode($response['body'], true);
+      $all_tags = $body['questions'];
+      //Retrieve currently selected settings from WP database
+      $selected_tags = get_option('davidson-domains-tags');
+      if ( !empty($selected_tags) ) { $selected_tags = davidson_domains_sanitize($selected_tags); }
+    }
 
     ?>
     <div class="wrap">
@@ -68,31 +75,49 @@ function davidson_domains_do(){
           </div>
           <?php
         }
-        settings_fields('davidson-domains-tagger');
-        do_settings_sections('davidson-domains-tagger');
-        //Iterate through object. Each key becomes a section. Iterate through the associated array.
-        foreach ($all_tags as $key => $attributes) {
-          //Section Title
-          ?><h3><?=$key?></h3><?php
-          //Section attributes
-          for ($x = 0; $x < sizeof($attributes); $x++) {
-            //Check the box if user has previously checked
-            if ( in_array($attributes[$x], $selected_tags) ){
-              ?>
-              <input id="<?=esc_attr($attributes[$x])?>" name='davidson-domains-tags[]' value ='<?=esc_attr($attributes[$x])?>' type="checkbox" checked>
-              <?php
-            }
-            //Don't check the box if user hasn't previously checked
-            else {
-              ?>
-              <input id="<?=esc_attr($attributes[$x])?>" name='davidson-domains-tags[]' value ='<?=esc_attr($attributes[$x])?>' type="checkbox">
-              <?php
-            }
-            //Checkbox label
-            ?><label for="<?=$attributes[$x]?>"> <?=$attributes[$x]?></label><?php
-          }
+        if ($has_response_error)  {
+          ?>
+          <p>Something went wrong when fetching data. Please contact T&I. Check the console for a more detailed error message.</p>
+          <script>console.log(<?= json_encode($response); ?>)</script>
+          <?php
         }
-        submit_button('Save Tags');
+        else if ( empty($all_tags) )  {
+          ?><p>The server did not return a properly formatted tags JSON object. Please contact T&I.</p><?php
+        }
+        else {
+          settings_fields('davidson-domains-tagger');
+          do_settings_sections('davidson-domains-tagger');
+          //Iterate through object. Each key becomes a section. Iterate through the associated array.
+          foreach ($all_tags as $key => $value) {
+            //Section Title
+            $question = $value['question'];
+            $options = $value['options'];
+            ?>
+            <h3><?= esc_attr($question) ?></h3><?php
+            //Section options
+            for ($x = 0; $x < sizeof($options); $x++) {
+              ?><div class="davidson-domains-tags-option"><?php
+                //Check the box if user has previously checked
+                if ( in_array($options[$x], $selected_tags) ){
+                  ?>
+                  <input id="<?=esc_attr($options[$x])?>" name='davidson-domains-tags[]' value ='<?=esc_attr($options[$x])?>' type="checkbox" checked>
+                  <?php
+                }
+                //Don't check the box if user hasn't previously checked
+                else {
+                  ?>
+                  <input id="<?=esc_attr($options[$x])?>" name='davidson-domains-tags[]' value ='<?=esc_attr($options[$x])?>' type="checkbox">
+                  <?php
+                }
+                //Checkbox label
+                ?>
+                <label for="<?=$options[$x]?>"> <?=$options[$x]?></label>
+              </div>
+              <?php
+            }
+          }
+          submit_button('Save Tags');
+        }
         ?>
       </form>
     </div>
